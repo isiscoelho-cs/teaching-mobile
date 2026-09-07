@@ -8,8 +8,7 @@ import {
   View,
 } from "react-native";
 
-// TODO 1: troque string por "adequado" | "atencao".
-type SituacaoIndicador = string;
+type SituacaoIndicador = "adequado" | "atencao";
 
 type UnidadeIndicador = "%" | "p.p." | "estudantes";
 
@@ -51,7 +50,10 @@ const INDICADORES: IndicadorEDA[] = [
 ];
 
 function formatarValor(valor: number, unidade: UnidadeIndicador): string {
-  // TODO 2: use espaço antes de "estudantes" e não use espaço nos símbolos.
+  if (unidade === "estudantes") {
+    return `${valor} ${unidade}`;
+  }
+
   return `${valor}${unidade}`;
 }
 
@@ -83,12 +85,12 @@ function CartaoIndicador({ indicador }: CartaoIndicadorProps) {
 export default function Index() {
   const [somenteAtencao, setSomenteAtencao] = useState<boolean>(false);
 
-  // TODO 3: filtre os indicadores quando somenteAtencao for true.
-  const indicadoresVisiveis = INDICADORES;
+  const indicadoresVisiveis = somenteAtencao
+    ? INDICADORES.filter((indicador) => indicador.situacao === "atencao")
+    : INDICADORES;
 
   function alternarFiltro(): void {
-    // TODO 4: alterne com base no valor anterior.
-    setSomenteAtencao(true);
+    setSomenteAtencao((anterior) => !anterior);
   }
 
   return (
@@ -109,8 +111,7 @@ export default function Index() {
               {somenteAtencao ? "Mostrar todos" : "Somente atenção"}
             </Text>
           </Pressable>
-          {/* TODO 5: mostre indicadoresVisiveis.length. */}
-          <Text style={styles.contagem}>{INDICADORES.length} exibidos</Text>
+          <Text style={styles.contagem}>{indicadoresVisiveis.length} exibidos</Text>
         </View>
 
         <View style={styles.lista}>
